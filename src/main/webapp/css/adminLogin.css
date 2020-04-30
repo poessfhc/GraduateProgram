@@ -1,0 +1,65 @@
+header .navWord p{
+	color: white;
+	font-size: 18px;
+	letter-spacing: 0.5em;
+	padding: 40px 40px;
+}
+.container .login-regist{
+	background-color: #4bbbfa;
+	border-color: #4bbbfa;
+	border-radius: 3px;
+	font-size: 14px;
+	color: white;
+}
+.container .login-regist:hover{
+	background-color: #23acf9;
+	border-color: #23acf9;
+}
+.container .inside{
+	padding: 0;
+	border: solid 1px rgba(0,0,0,0.2);
+}
+.container ul{
+	margin-bottom: -40px;
+}
+.container ul li{
+	width: 50%;	
+	padding-bottom: 30px;
+	background-color: white;
+}
+.container ul .active a{
+	background-color: white;
+}
+.container ul li a{
+	display: block;
+	text-decoration: none;
+	color: black;
+	background-color: rgb(245, 245, 245);
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+}
+.container .tab-content{
+	padding: 0 50px;
+	background-color: white;
+	padding-bottom: 50px;
+}
+.container .tab-content #login div{
+	margin-top: 30px;
+}
+.container .tab-content #login .check_box label{
+	margin-left: 5px;
+	font-weight: 400;
+}
+.container .tab-content #regist{		/*	注册*/
+	display: none;
+}
+.container .tab-content #regist div{
+	margin-top: 30px;
+}
+.container .tab-content #regist label{
+	width: 100%;
+}
+section.container{
+	padding-bottom: 100px;
+}

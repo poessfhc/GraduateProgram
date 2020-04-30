@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>管理员登录</title>
+		<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="css/pub.css">
+		<link rel="stylesheet" type="text/css" href="css/adminLogin.css"/>
+		<script src="libs/jQuery/jquery-1.12.4.js" type="text/javascript"></script>
+		<script src="libs/jQuery/jquery.cookie.js" type="text/javascript"></script>
+		<script src="libs/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		<script>
+			$(function(){
+				var time = '';
+				var rePsd = $.cookie("psd");
+				var reUser = $.cookie("user");
+				if(rePsd) $("#login #password").val(rePsd);
+				if(reUser) $("#login #account").val(reUser);
+				$(".container ul a").click(function(){			//	点击登录账号或注册账号，切换显示内容
+					$(this).parent().addClass("active");
+					$(this).parent().siblings().removeClass("active");
+					var target = $(this).parent().data("target");
+					$(target).show();
+					$(target).siblings().hide();
+				});
+				$("section .inside #login .login-regist").click(function(){			//	点击登录
+					var user = $("#login #account").val();
+					var psd = $("#login #password").val();
+					var isRemember = $("#login #remeb_psd").is(":checked");	//	获取是否记住密码
+					if(isRemember) time = 7;
+					if(!user){
+						alert("请输入通行证！");
+					}else if(!psd){
+						alert("请输入密码！");
+					}else{
+						getData("adminDoLogin", {"adminEmail": user, "psd": psd}, function(){
+							$.cookie("psd",psd, {expires: time});
+							$.cookie("user",user, {expires: time});
+							window.location.href = "adminControl.html";
+						});
+					}
+				});
+				$("section .inside #regist .login-regist").click(function(){		//	点击注册或修改密码
+					var user = $("#regist #user").val();
+					var psd = $("#regist #psd").val();
+					var verif = $("#regist #verif").val();
+					if(!user){
+						alert("请输入通行证！");
+					}else if(!psd){
+						alert("请输入密码！");
+					}else if(psd.length < 5){
+						alert("密码长度不够！");
+					}else if(!verif){
+						alert("请输入验证码！");
+					}else{
+						getData("adminDoRegister", {"adminEmail": user, "psd": psd, "verif": verif}, function(){
+							alert("操作成功！");
+							window.location.reload();
+						});
+					}
+				});
+				function getData(url, data, callback){
+					$.ajax({
+						url: url,
+						data: data,
+						dataType:'json',
+						type:'post',
+						success:function(data){
+							debugger
+							if(data.status == 1){
+								if(callback) callback();
+							}else{
+								alert("操作失败！");
+							}
+						},
+						error:function(){
+							console.log("error");
+						}
+					});
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<header class="container">
+			<div class="row">
+				<div class="col-lg-12 navWord">
+					<p class="noselect">欢迎来到安全用电系统后台管理系统</p>
+				</div>
+			</div>
+		</header>
+		<section class="container">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 inside">
+					<ul class="list-unstyled clearfix">
+						<li class="pull-left active" data-target="#login"><a href="javascript:;">登录账号</a></li>
+						<li class="pull-left"  data-target="#regist"><a href="javascript:;">注册账号/修改密码</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="login">
+							<form action="">
+								<div class="form-group">
+									<label for="account" class="text-muted">通行证</label>
+									<input type="text" id="account" placeholder="通行证" class="form-control">
+								</div>
+								<div class="form-group">
+									<label for="password" class="text-muted">密码</label>
+									<input type="password" id="password" placeholder="密码" class="form-control">
+								</div>
+								<div class="check_box clearfix">
+									<input type="checkbox" id="remeb_psd" class="pull-left" checked="checked">
+									<label for="remeb_psd" class="text-muted pull-left noselect">记住密码</label>
+								</div>
+								<div class="form-group clearfix">
+									<a href="javascript:;" class="btn btn-block btn-lg login-regist">登录</a>
+								</div>
+							</form>
+						</div>
+						<div id="regist">
+							<form action="">
+								<div class="form-group">
+									<label for="user" class="text-muted">通行证</label>
+									<input type="password" id="user" placeholder="通行证" class="form-control">
+								</div>
+								<div class="form-group">
+									<label for="psd" class="text-muted">新密码</label>
+									<input type="password" id="psd" placeholder="5-20位英文,数字,符号,区分大小写" class="form-control">
+								</div>
+								<div class="form-group">
+									<label for="verif" class="text-muted">验证码</label>
+									<input type="password" id="verif" placeholder="验证码" class="form-control">
+								</div>
+								<div class="form-group">
+									<a href="javascript:;" class="btn btn-lg btn-block login-regist">注册/修改密码</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>

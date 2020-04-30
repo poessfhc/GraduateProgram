@@ -1,0 +1,28 @@
+body{
+	background: url(../imgs/bg.jpg) no-repeat 0 0;
+	background-size: cover;
+	padding: 30px 0;
+}
+.container{
+	background-color: rgba(255,255,255,0.2);
+	padding-bottom: 20px;
+}
+.modal .modal-dialog .modal-content .modal-body .logbtn{
+	background-color: #4bbbfa;
+	border-color: #4bbbfa;
+	border-radius: 3px;
+	font-size: 14px;
+	color: rgba(255,255,255,0.8);
+	margin-top: 30px;
+}
+.modal .modal-dialog .modal-content .modal-body .logbtn:hover{
+	background-color: #23acf9;
+	border-color: #23acf9;
+	color: white;
+}
+.noselect{
+	user-select:none;
+}
+.hideen{
+	display: none;
+}

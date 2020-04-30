@@ -1,0 +1,114 @@
+section{
+	padding: 100px 0 100px 0;
+}
+section label{
+	color: rgba(0,0,0,0.6);
+	margin: 15px 0 15px 0;
+}
+section .left{
+	padding: 10px 0;
+	border-right: solid 1px rgba(255,255,255,0.2);
+}
+section .left a{
+	float: left;
+	padding-left: 50px;
+	font-size: 18px;
+	width: 100%;
+	text-decoration: none;
+	color: rgba(255,255,255,0.5);
+	height: 50px;
+	line-height: 50px;
+	margin-bottom: 20px;
+}
+section .left a:last-child{
+	margin-bottom: 0;
+}
+section .left a:hover{
+	color: rgba(255,255,255,1);
+	background-color: rgba(255,255,255,0.3);
+}
+section .right .name{
+	margin-top: 40px;
+}
+section .right .psd{
+	margin-top: -30px;
+}
+section .right .verif label{
+	margin-right: 80%;
+}
+section .right .verif input{
+	width: 40%;
+}
+section .right .set button{
+	background-color: #4bbbfa;
+	border-color: #4bbbfa;
+	border-radius: 3px;
+	font-size: 14px;
+	color: rgba(255,255,255,0.8);
+	margin-top: 30px;
+}
+section .right .set button:hover{
+	background-color: #23acf9;
+	border-color: #23acf9;
+	color: white;
+}
+section .right .hid{
+	display: none;
+}
+section .right .head p{
+	color: rgba(255,255,255,0.8);
+	font-size: 14px;
+}
+section .right .head img{
+	width: 160px;
+	height: 160px;
+	margin: 50px auto;
+	border: solid 1px rgba(255,255,255,0.5);
+	margin-top: 20px;
+}
+section .right .head input{
+	padding-top: 8px;
+}
+section .right .head .set button{
+	margin-top: 0px;
+}
+section .left .a-click{
+	color: rgba(255,255,255,1);
+	background-color: rgba(255,255,255,0.3);
+}
+section .right .beHost{
+	padding: 120px 0px;
+}
+section .right .beHost button{
+	margin-right: 50px;
+	background-color: #4bbbfa;
+	border-color: #4bbbfa;
+	border-radius: 3px;
+	font-size: 14px;
+	color: rgba(255,255,255,0.8);
+}
+section .right .beHost button:hover{
+	background-color: #23acf9;
+	border-color: #23acf9;
+	color: white;
+}
+section .right .beHost #error{
+	color: red;
+	font-size: 18px;
+	display: none;
+}
+section .right .beHost #success{
+	color: green;
+	font-size: 18px;
+	display: none;
+}
+section .right .updateBg p{
+	color: rgba(255,255,255,0.8);
+	font-size: 14px;
+}
+section .right .updateBg input{
+	padding-top: 8px;
+}
+section .right .updateBg .set button{
+	margin-top: 0px;
+}

@@ -1,0 +1,31 @@
+ header{
+	padding: 50px 0;
+}
+.content .allUser,
+.content .testing,
+.content .operation,
+.content .errorLogs{
+	display: none;
+}
+.content table td{
+	/* color: white; */
+	text-align: center;
+}
+.content .tip{
+	font-size: 17px;
+	color: white;
+}
+.content .btn{
+	height: 30px;
+	margin-right: 10px;
+	font-size: 13px;
+}
+.content .add{
+	margin: 20px 0;
+}
+.content table tr td{
+	text-align: center;
+}
+#addOperation .time input{
+	margin-bottom: 5px;
+}

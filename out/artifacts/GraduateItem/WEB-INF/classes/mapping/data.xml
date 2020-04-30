@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指用户自定义的命名空间。 -->
+<mapper namespace="wang.dreamland.www.dao.DataMapper">
+
+    <select id="selectByName" parameterType="String" resultType="wang.dreamland.www.entity.Data">
+    select * from data where email = #{email}
+  </select>
+
+    <select id="selectByNameAndMachineName" parameterType="String" resultType="wang.dreamland.www.entity.Data">
+    select * from data where email = #{email} and machineName = #{machineName}
+  </select>
+
+    <select id="selectTime" parameterType="Date" resultType="wang.dreamland.www.entity.Data">
+    select * from data where time = #{time}
+  </select>
+
+    <select id="selectTimeCompare" parameterType="Date" resultType="wang.dreamland.www.entity.Data">
+    select * from data where time > #{time}
+  </select>
+
+
+
+</mapper>

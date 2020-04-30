@@ -1,0 +1,86 @@
+header{
+	padding: 20px;
+}
+header .welTip{
+	padding: 20px;
+	color: white;
+	font-size: 18px;
+}
+header .time{
+	text-align: center;
+}
+header .baseInfo{
+	padding-top: 15px;
+	/* background-color: white; */
+}
+header .location .showMap{
+	background-color: #4bbbfa;
+	border-color: #4bbbfa;
+	border-radius: 3px;
+	font-size: 14px;
+	color: white;
+}
+header .location .showMap:hover{
+	background-color: #23acf9;
+	border-color: #23acf9;
+}
+header .headerTip{
+	height: 80px;
+}
+header .homeNum p{
+	color: white;
+	font-size: 17px;
+	height : 30px;
+	line-height: 30px;
+}
+header .homeNum p:first-child{
+	margin-left: 0.2em;
+}
+header .moreOperation a{
+	margin-right: 1em;
+	color: rgba(255,255,255,0.7);
+	text-decoration: none;
+	font-size: 16px;
+}
+header .moreOperation a:hover{
+	color: rgba(255,255,255,1);
+	text-decoration: underline;
+}
+header .location{
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+/* header .more a{
+	display: block;
+	line-height: 32px;
+	text-align: center;
+	font-size: 14px;
+	color: rgba(0,0,0,0.7);
+	text-decoration: none;
+	border: 1px rgba(255,255,255,0.3) solid;
+	background-color: rgba(255,255,255,0.8);
+	box-sizing: border-box;
+}
+header .more a:hover{
+	color: rgba(0,0,0,1);
+	background-color: rgba(255,255,255,1);
+}
+ */
+#map{
+	padding-top: 20px;
+}
+#map .map{
+	width: 100%;
+	height: 600px;
+	background-color: rgba(255,255,255,0.7);
+	border: solid 8px rgba(0,0,0,0.1);
+	box-sizing: border-box;
+	overflow: hidden;
+	display: none;
+}
+#showData .left{
+	
+}
+#showData .right{
+	
+}

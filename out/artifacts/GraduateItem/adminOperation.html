@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>总数据库数据</title>
+		<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="css/pub.css">
+		<link rel="stylesheet" type="text/css" href="css/adminOperation.css"/>
+		<script src="libs/jQuery/jquery-1.12.4.js" type="text/javascript"></script>
+		<script src="libs/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		<script>
+			$(function(){
+				var oldEmail = '';
+				var href = window.location.href;
+				var oper = hrefCut(href, "oper");
+				var home = hrefCut(href, "home");
+				if(oper == 1){
+					$(".content .allUser").show();
+				}else if(oper == 2){
+					$(".content .testing").show();
+					// getData("php/get.php", {"server": oper, "home": home}, oper);
+				}else if(oper == 3){
+					$(".content .operation").show();
+					// getData("php/get.php", {"server": oper, "home": home}, oper);
+				}else{
+					$(".content .errorLogs").show();
+				}
+				getData("php/get.php", {"server": oper, "home": home}, oper);
+				$("body").delegate(".content .allUser table .setHost", "click", function(){		//	设为户主
+					var re = window.confirm("确认设置为户主吗？该操作将修改用户结构！");
+					if(re){
+						$(this).parents("tr").find(".isHost").html("是");
+						$(this).parents("tr").siblings().find(".isHost").html("否");
+						var userEmail = $(this).parents().find(".email").html();
+						updateData("php/test.php", {"userEmail": userEmail, "server": 1, "home": home});
+					}
+				});
+				$("body").delegate(".content .allUser table .cancelHost", "click", function(){			//	取消户主身份
+					var re = window.confirm("确认取消户主身份吗？该操作将修改用户结构！");
+					if(re){
+						$(this).parents("tr").find(".isHost").html("否");
+						var userEmail = $(this).parents().find(".email").html();
+						updateData("php/test.php", {"userEmail": userEmail, "server": 2, "home": home});
+						// $(this).parents("tr").find(".setHost").show();
+						// $(this).parents("tr").find(".cancelHost").hide();
+					}
+				});
+				$("body").delegate(".content .allUser table .delUser", "click", function(){				//	删除用户
+					var re = window.confirm("确认删除用户吗？该操作不可撤销！");
+					if(re){
+						$(this).parents("tr").hide();
+						var userEmail = $(this).parents().find(".email").html();
+						updateData("php/test.php", {"userEmail": userEmail, "server": 3, "home": home});
+					}
+				});
+				$("body").delegate(".content .testing table .delTesting", "click", function(){			//	删除监控
+					var re = window.confirm("确认删除监控吗？该操作不可撤销！");
+					if(re){
+						$(this).parents("tr").hide();
+						var equip = $(this).parents("tr").find(".equip").html();
+						updateData("php/test.php", {"home": home, "equip": equip, "server": 1});
+					}	
+				});
+				$("body").delegate(".content .testing table .updateTesting", "click", function(){		//	取消警告信息
+					var re = window.confirm("确认取消警告信息吗？该操作不可撤销！");
+					if(re){
+						$(this).parents("tr").find(".testingInfo").html("正常");
+						var equip = $(this).parents("tr").find(".equip").html();
+						updateData("php/test.php", {"home": home, "equip": equip, "server": 2});
+					}
+				});
+				$("body").delegate(".content .operation table .delOperation", "click", function(){		//	删除操作记录
+					var re = window.confirm("确认删除操作记录吗？该操作不可撤销！");
+					if(re){
+						$(this).parents("tr").hide();
+						var userEmail = $(this).parents("tr").find(".email").html();
+						var equip = $(this).parents("tr").find(".equip").html();
+						var time = $(this).parents("tr").find(".time").html();
+						updateData("php/test.php", {"userEmail": userEmail, "equip": equip, "time": time});
+					}
+				});
+				$("body").delegate(".content .errorLogs table .delErrorLog", "click", function(){		//	删除异常记录
+					var re = window.confirm("确认删除异常记录吗？该操作不可撤销！");
+					if(re){
+						$(this).parents("tr").hide();
+						var equip = $(this).parents("tr").find(".equip").html();
+						var time = $(this).parents("tr").find(".time").html();
+						updateData("php/test.php", {"home": home, "equip": equip, "time": time});
+					}
+				});
+				$("body").delegate(".content .allUser .updateUserInfo","click", function(){				//	修改用户信息
+					oldEmail = $(this).parents("tr").find(".email").html();
+					$(this).parents("tr").addClass("nowUpdateUser");
+					$("#updateUser").modal("show");
+				});
+				$("#updateUser .logbtn").click(function(){	//	修改用户信息界面的确定
+					var name = $("#updateUser #updateUserName").val();
+					var newEmail = $("#updateUser #updateUserEmail").val();
+					var psd = $("#updateUser #updateUserPsd").val();
+					if(psd.length < 5){
+						alert("密码长度不够！");
+					}else{
+						updateData("php/test.php", {"oldEmail": oldEmail, "newEmail": newEmail, "newName": name, "newPsd": psd});
+						if(newEmail) $(".content .allUser table .nowUpdateUser").find(".email").html(newEmail);
+						if(name) $(".content .allUser table .nowUpdateUser").find(".name").html(name);
+						$(".content .allUser table .nowUpdateUser").removeClass("nowUpdateUser");
+						$("#updateUser").modal("hide");
+						$("#updateUser").find("input").val('');						//	点击提交修改的信息，重置input数据
+					}
+				});
+				$("#addUser .logbtn").click(function(){								//	添加用户
+					var name = $("#addUser #addUserName").val();
+					var email = $("#addUser #addUserEmail").val();
+					var password = $("#addUser #addUserPassword").val();
+					if(!name){
+						alert("请输入用户名！");
+					}else if(!email){
+						alert("请输入邮箱！");
+					}else if(!password){
+						alert("请输入密码！");
+					}else if(password.length < 5){
+						alert("密码长度不够！");
+					}else{
+						// $("#addUser .addUserIsHost input[type='radio']").eq(0).prop("checked", "checked");
+						updateData("php/test.php", {"userName": name, "userEnail": email, "userPsd": password});
+						$("#addUser").modal("hide");
+						var newUser = $('<tr class="warning">'+
+									'<td class="name">' + name + '</td>'+
+									'<td class="email">' + email + '</td>'+
+									'<td class="isHost">否</td>'+
+									'<td>'+
+										'<button type="button" class="btn btn-info setHost">设为户主</button>'+
+										'<button type="button" class="btn btn-info cancelHost">取消户主</button>'+
+										'<button type="button" class="btn btn-info delUser">删除用户</button>'+
+										'<button type="button" class="btn btn-info updateUserInfo">修改用户信息</button>'+
+									'</td>'+
+								'</tr>');
+						$(".content .allUser table").append(newUser);
+					}
+				});
+				// $("#addOperation .logbtn").click(function(){						//	添加操作记录 data-toggle="modal"
+				// data-target="#updateUser"
+				// 	var user = $("#addOperation #addOperationUser").val();
+				// 	var operation = $("#addOperation #addOperationDetail").val();
+				// 	var hour = $("#addOperation .hour").val();
+				// 	var minute = $("#addOperation .minute").val();
+				// 	if(!user){
+				// 		alert("请输入用户！");
+				// 	}else if(!operation){
+				// 		alert("请输入用户操作！");
+				// 	}else if(!hour){
+				// 		alert("请输入具体小时！");
+				// 	}else if(!minute){
+				// 		alert("请输入具体分钟！");
+				// 	}else{
+				// 		var date = new Date();
+				// 		var year = date.getFullYear();
+				// 		var month = date.getMonth();
+				// 		var day = date.getDay();
+				// 		var time = year + "-" + month + "-" + day + " " + hour + ":" + minute;
+				// 		var operation = $('<tr>'+
+				// 				'<td>' + user + '</td>'+
+				// 				'<td>' + operation + '</td>'+
+				// 				'<td>' + time + '</td>'+
+				// 				'<td>'+
+				// 					'<button type="button" class="btn btn-info delOperation">删除操作记录</button>'+
+				// 				'</td>'+
+				// 			'</tr>');
+				// 		alert("添加成功！");
+				// 		$("#addOperation").modal("hide");
+				// 		$(".content .operation table").append(operation);
+				// 	}		 data-toggle="modal" data-target="#updateUser"
+				// });
+				$(".content .allUser .add").click(function(){					//	点击添加用户信息，重置input数据
+					$("#addUser").find("input").val('');
+				});
+				// $(".content .operation .add").click(function(){					//	点击添加操作信息，重置input数据
+				// 	$("#addOperation").find("input").val('');
+				// });
+				function hrefCut(href, target){
+					var arr = href.split("?")[1].split("&");
+					var obj = {};
+					for(var i = 0; i < arr.length; i++){	
+						var key = arr[i].split("=")[0];
+						var value = arr[i].split("=")[1];
+						obj[key] = value;
+					}
+					return obj[target];
+				}
+				function getData(url, data, server, callback){
+					$.ajax({
+						url: url,
+						data: data,
+						dataType:'json',
+						type:'post',
+						success:function(data){
+							if(server == 1) createUsers(data);
+							else if(server == 2) createEquips(data);
+							else if(server == 3) createOperatLogs(data);
+							else if(server == 4) createErrorLogs(data);
+							else console.log("error");
+						},
+						error:function(){
+							console.log("error");
+						}
+					});
+				}
+				function createUsers(users){	//	创建用户
+					for(let key in users){
+						var tr = $('<tr class="warning">'+
+									'<td class="name">'+ key +'</td>'+
+									'<td class="email">'+ users[key][0] +'</td>'+
+									'<td class="isHost">'+ users[key][1] +'</td>'+
+									'<td class="time">'+ users[key][2] +'</td>'+
+									'<td>'+
+										'<button type="button" class="btn btn-info setHost">设为户主</button>'+
+										'<button type="button" class="btn btn-info cancelHost">取消户主</button>'+
+										'<button type="button" class="btn btn-info delUser">删除用户</button>'+
+										'<button type="button" class="btn btn-info updateUserInfo">修改用户信息</button>'+
+									'</td>'+
+								'</tr>');
+						$("header .allUser table").append(tr);
+					}
+					// showTr();
+				}
+				function createEquips(equips){		//	创建设备
+					for(let key in equips){
+						var tr = $('<tr class="warning">'+
+									'<td class="equip">'+ key +'</td>'+
+									'<td class="testingInfo">'+ equips[key][0] +'</td>'+
+									'<td class="detail">'+'电流：'+ equips[key][1] +'&ensp;&emsp;电压：'+ equips[key][2] +'&ensp;&emsp;对地谐波电流：'+ equips[key][3] +'</td>'+
+									'<td>'+
+										'<button type="button" class="btn btn-info delTesting">删除监控</button>'+
+										'<button type="button" class="btn btn-info updateTesting">取消警告信息</button>'+
+									'</td>'+
+								'</tr>');
+						$("header .testing table").append(tr);
+					}
+				}
+				function createOperatLogs(logs){	//	创建操作记录
+					for(let key in logs){
+						var tr = $('<tr class="warning">'+
+									'<td class="email">'+ key +'</td>'+
+									'<td class="name">'+ logs[key][0] +'</td>'+
+									'<td class="equip">'+ logs[key][1] +'</td>'+
+									'<td class="oprate">'+ logs[key][2] +'</td>'+
+									'<td class="time">'+ logs[key][3] +'</td>'+
+									'<td>'+
+										'<button type="button" class="btn btn-info delOperation">删除操作记录</button>'+
+									'</td>'+
+								'</tr>');
+						$("header .operation table").append(tr);
+					}
+				}
+				function createErrorLogs(logs){	//	创建异常记录
+					for(let key in logs){
+						var tr = $('<tr class="warning">'+
+									'<td class="equip">'+ key +'</td>'+
+									'<td class="log">'+ logs[key][0] +'</td>'+
+									'<td class="time">'+ logs[key][1] +'</td>'+
+									'<td>'+
+										'<button type="button" class="btn btn-info delErrorLog">删除操作记录</button>'+
+									'</td>'+
+								'</tr>');
+						$("header .errorLogs table").append(tr);
+					}
+				}
+				function updateData(url, data){		//	发送ajax
+					$.ajax({
+						url: url,
+						data: data,
+						dataType:'json',
+						type:'post',
+						success:function(data){
+							if(data.status == 1){
+								
+							}else{
+								console.log("fail");
+							} 
+						},
+						error:function(){
+							console.log("error");
+						}
+					});
+				}
+				// function showTr(){		//	户主/非户主条件下隐藏某些按钮
+				// 	var trs = $(".content .allUser tr");
+				// 	for(let i = 0; i < trs.length; i++){
+				// 		if($(trs[i]).find(".isHost").html() == "是"){
+				// 			$(trs[i]).find(".setHost").hide();
+				// 		}else{
+				// 			$(trs[i]).find(".cancelHost").hide();
+				// 		}
+				// 	}
+				// }
+			});
+		</script>
+	</head>
+	<body>
+		<header class="container content">
+			<div class="allUser">
+				<p class="tip">用户信息</p>
+				<table class="table table-bordered table-responsive table-hover">
+					<tr class="warning">
+						<td>用户名</td>
+						<td>email</td>
+						<td>是否户主</td>
+						<td>注册时间</td>
+						<td>操作</td>
+					</tr>
+				</table>
+				<button type="button" class="btn btn-info add" data-toggle="modal" data-target="#addUser">添加用户</button>
+			</div>
+			<div class="testing">
+				<p class="tip">监控信息</p>
+				<table class="table table-bordered table-responsive table-hover">
+					<tr class="warning">
+						<td>用电器（线路）</td>
+						<td>状态</td>
+						<td>详情</td>
+						<td>操作</td>
+					</tr>
+				</table>
+			<!-- 	<button type="button" class="btn btn-info add" data-toggle="modal" data-target="#addTesting">添加监控</button> -->
+			</div>
+			<div class="operation">
+				<p class="tip">操作记录</p>
+				<table class="table table-bordered table-responsive table-hover">
+					<tr class="warning">
+						<td>用户邮箱</td>
+						<td>用户名</td>
+						<td>设备</td>
+						<td>记录</td>
+						<td>时间</td>
+						<td>操作</td>
+					</tr>
+				</table>
+			</div>
+			<div class="errorLogs">
+				<p class="tip">异常记录</p>
+				<table class="table table-bordered table-responsive table-hover">
+					<tr class="warning">
+						<td>设备</td>
+						<td>记录</td>
+						<td>时间</td>
+						<td>操作</td>
+					</tr>
+				</table>
+			</div>
+		</header>
+		<div class="modal fade" id="updateUser">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+					<div class="modal-header">
+						<span class="close" data-dismiss="modal">&times;</span>
+						<h4>修改用户信息</h4>
+					</div>
+					<div class="modal-body">
+						<form action="">
+							<div class="form-group">
+								<label for="updateUserName" class="text-muted">用户名</label>
+								<input type="text" id="updateUserName" placeholder="用户名" class="form-control verif-account">
+							</div>
+							<div class="form-group">
+								<label for="updateUserEmail" class="text-muted">邮箱</label>
+								<input type="input" id="updateUserEmail" placeholder="邮箱" class="form-control">
+							</div>
+							<div class="form-group">
+								<label for="updateUserPsd" class="text-muted">密码</label>
+								<input type="input" id="updateUserPsd" placeholder="密码" class="form-control">
+							</div>
+							<div class="form-group">
+								<a href="javascript:;" class="btn btn-block logbtn">确认</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="addUser">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+					<div class="modal-header">
+						<span class="close" data-dismiss="modal">&times;</span>
+						<h4>添加用户</h4>
+					</div>
+					<div class="modal-body">
+						<form action="">
+							<div class="form-group">
+								<label for="addUserName" class="text-muted">用户名</label>
+								<input type="input" id="addUserName" placeholder="用户名" class="form-control verif-account">
+							</div>
+							<div class="form-group">
+								<label for="addUserEmail" class="text-muted">邮箱</label>
+								<input type="input" id="addUserEmail" placeholder="邮箱" class="form-control">
+							</div>
+							<div class="form-group">
+								<label for="addUserPassword" class="text-muted">密码</label>
+								<input type="password" id="addUserPassword" placeholder="密码" class="form-control">
+							</div>
+							<div class="form-group">
+								<a href="javascript:;" class="btn btn-block logbtn">确认</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
